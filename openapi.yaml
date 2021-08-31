@@ -19,6 +19,11 @@ servers:
     description: Production
   - url: 'https://metropolis.staging.sddns.nl/api/v0'
     description: Staging
+  - url: '{customUrl}/api/v0'
+    variables:
+      customUrl:
+        default: 'http://localhost'
+        description: Custom url
 paths:
   '/companies/{company_id}/children':
     parameters:
