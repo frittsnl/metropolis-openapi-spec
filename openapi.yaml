@@ -289,20 +289,13 @@ paths:
     parameters:
       - $ref: '#/components/parameters/company_id'
       - $ref: '#/components/parameters/plant_id'
+      - $ref: '#/components/parameters/plant_with_fields'
     get:
       summary: Plant details
       operationId: getPlantById
       description: Gets the details of a plant
       tags:
         - Plants
-      parameters:
-        - in: query
-          name: with
-          required: false
-          description: 'May containg all or some of the following values\: `tags`, `custom_fields`, `companies`, `meters`, `notes`'
-          schema:
-            type: string
-            example: 'tags,custom_fields,companies,meters,notes'
       responses:
         '200':
           description: Expected response to a valid request. The example response contains all possible object types that can be returned.
@@ -332,6 +325,7 @@ paths:
   '/companies/{company_id}/plants':
     parameters:
       - $ref: '#/components/parameters/company_id'
+      - $ref: '#/components/parameters/plant_with_fields'
     get:
       summary: Plants
       operationId: getPlants
@@ -339,13 +333,6 @@ paths:
       tags:
         - Plants
       parameters:
-        - in: query
-          name: with
-          required: false
-          description: 'May containg all or some of the following values\: `companies`,`tags`,`custom_fields`,`notes`,`yield_status`,`yield_score`,`meter_issues`,`status`'
-          schema:
-            type: string
-            example: 'companies'
         - in: query
           name: query
           required: false
@@ -564,6 +551,14 @@ components:
       schema:
         type: string
         example: 10cv143-ffavw12-s8nD4t4
+    plant_with_fields:
+      name: with
+      in: query
+      required: false
+      description: 'May containg all or some of the following values\: `tags`, `custom_fields`, `companies`, `meters`, `notes`'
+      schema:
+        type: string
+        example: 'tags,custom_fields,companies,meters,notes'
   schemas:
     Address:
       allOf:
@@ -766,7 +761,7 @@ components:
           type: integer
           example: 2
         data:
-          $ref: '#/components/schemas/PlantCreateResponse'
+          $ref: '#/components/schemas/GetPlantResponse'
         next_page_url:
           type: string
           example: "/?page=3"
@@ -811,6 +806,26 @@ components:
           $ref: '#/components/schemas/date-time'
         address:
           $ref: '#/components/schemas/Address'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomField'
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+        meters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Meter'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
       required:
         - name
         - id
