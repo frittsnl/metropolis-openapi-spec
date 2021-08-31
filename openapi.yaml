@@ -332,6 +332,64 @@ paths:
   '/companies/{company_id}/plants':
     parameters:
       - $ref: '#/components/parameters/company_id'
+    get:
+      summary: Plants
+      operationId: getPlants
+      description: Gets the plants within a company
+      tags:
+        - Plants
+      parameters:
+        - in: query
+          name: with
+          required: false
+          description: 'May containg all or some of the following values\: `companies`,`tags`,`custom_fields`,`notes`,`yield_status`,`yield_score`,`meter_issues`,`status`'
+          schema:
+            type: string
+            example: 'companies'
+        - in: query
+          name: query
+          required: false
+          schema:
+            type: string
+            example: 'Familie de Vries'
+        - in: query
+          name: street
+          required: false
+          schema:
+            type: string
+            example: 'Maliesingel'
+        - in: query
+          name: postal_code
+          required: false
+          schema:
+            type: string
+            example: '3581BK'
+        - in: query
+          name: city
+          required: false
+          schema:
+            type: string
+            example: 'Utrecht'
+        - in: query
+          name: reference_identifier
+          required: false
+          schema:
+            type: string
+            example: 'EAN00123456789000'
+        - in: query
+          name: page
+          required: false
+          description: 'Page of the search results'
+          schema:
+            type: integer
+            example: 2
+      responses:
+        '200':
+          description: Expected response to a valid request. The example response contains all possible object types that can be returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPaginatedPlantsResponse'
     post:
       summary: Create Plant
       operationId: createPlant
@@ -702,6 +760,31 @@ components:
       type: string
       format: date-time
       example: '2020-12-10T13:41:00Z'
+    GetPaginatedPlantsResponse:
+      properties:
+        current_page:
+          type: integer
+          example: 2
+        data:
+          $ref: '#/components/schemas/PlantCreateResponse'
+        next_page_url:
+          type: string
+          example: "/?page=3"
+        path:
+          type: string
+          example: "/"
+        per_page:
+          type: integer
+          default: 15
+        prev_page:
+          type: string
+          example: "/?page=1"
+        to:
+          type: integer
+          default: 45
+        total:
+          type: integer
+          default: 225
     GetPlantResponse:
       type: object
       properties:
