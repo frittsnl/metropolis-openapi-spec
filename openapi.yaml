@@ -285,43 +285,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MeterExistenceResponse'
-  '/companies/{company_id}/plants/{plant_id}':
-    parameters:
-      - $ref: '#/components/parameters/company_id'
-      - $ref: '#/components/parameters/plant_id'
-      - $ref: '#/components/parameters/plant_with_fields'
-    get:
-      summary: Plant details
-      operationId: getPlantById
-      description: Gets the details of a plant
-      tags:
-        - Plants
-      responses:
-        '200':
-          description: Expected response to a valid request. The example response contains all possible object types that can be returned.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetPlantResponse' # TO UPDATE THE RESPONSE
-    put:
-      summary: Update Plant
-      operationId: updatePlant
-      description: Update the details of a Plant
-      tags:
-        - Plants
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PlantPayload'
-        description: ''
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PlantUpdateResponse'
   '/companies/{company_id}/plants':
     parameters:
       - $ref: '#/components/parameters/company_id'
@@ -362,7 +325,7 @@ paths:
           required: false
           schema:
             type: string
-            example: 'EAN00123456789000'
+            example: 31212117-dc7f-308e-9191-888dbb268074
         - in: query
           name: page
           required: false
@@ -396,6 +359,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PlantCreateResponse'
+  '/companies/{company_id}/plants/{plant_id}':
+    parameters:
+      - $ref: '#/components/parameters/company_id'
+      - $ref: '#/components/parameters/plant_id'
+      - $ref: '#/components/parameters/plant_with_fields'
+    get:
+      summary: Plant details
+      operationId: getPlantById
+      description: Gets the details of a plant
+      tags:
+        - Plants
+      responses:
+        '200':
+          description: Expected response to a valid request. The example response contains all possible object types that can be returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPlantResponse' # TO UPDATE THE RESPONSE
+    put:
+      summary: Update Plant
+      operationId: updatePlant
+      description: Update the details of a Plant
+      tags:
+        - Plants
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlantPayload'
+        description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlantUpdateResponse'
   '/companies/{company_id}/plants/{plant_id}/custom-fields':
     parameters:
       - $ref: '#/components/parameters/company_id'
