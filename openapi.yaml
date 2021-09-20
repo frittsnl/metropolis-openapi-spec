@@ -1,1168 +1,1273 @@
 openapi: 3.0.3
 tags:
-    - name: Companies
-    - name: Inbound Drivers
-    - name: Meters
-    - name: Plants
+  - name: Companies
+  - name: Inbound Drivers
+  - name: Meters
+  - name: Plants
 info:
-    version: 0.0.1
-    title: SunData API
-    description: SunData API OpenAPI Specification.
-    license:
-        name: Apache
-    contact:
-        name: SunData
-        url: 'https://www.sundata.nl'
-        email: admin@sundata.nl
+  version: 0.0.1
+  title: SunData API
+  description: SunData API OpenAPI Specification.
+  license:
+    name: Apache
+  contact:
+    name: SunData
+    url: 'https://www.sundata.nl'
+    email: admin@sundata.nl
 servers:
-    - url: 'https://api.sundata.nl/api/v0'
-      description: Production
-    - url: 'https://metropolis.staging.sddns.nl/api/v0'
-      description: Staging
+  - url: 'https://api.sundata.nl/api/v0'
+    description: Production
+  - url: 'https://metropolis.staging.sddns.nl/api/v0'
+    description: Staging
+  - url: '{customUrl}/api/v0'
+    variables:
+      customUrl:
+        default: 'http://localhost'
+        description: Custom url
 paths:
-    '/companies/{company_id}/children':
-        parameters:
-            - $ref: '#/components/parameters/company_id'
-        get:
-            summary: Get Company Child Companies
-            description: Get the Child Companies of a Company by Company ID
-            operationId: getCompanyChildCompanies
-            tags:
-                - Companies
-            responses:
-                '200':
-                    description: Expected response to a valid request
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    $ref: '#/components/schemas/Company'
-                            example:
-                                - id: 2
-                                  name: 'Padberg, Balistreri and Heidenreich'
-                                  non_mon_accessible: false
-                                  updated_at: '2020-11-26T18:37:48Z'
-                                  created_at: '2020-11-09T18:36:49Z'
-                                - id: 3
-                                  name: Barrows Group
-                                  non_mon_accessible: false
-                                  updated_at: null
-                                  created_at: '2020-01-24T05:17:39Z'
-    '/companies/{company_id}/children/tags':
-        parameters:
-            - $ref: '#/components/parameters/company_id'
-        get:
-            summary: Get Child Companies Tags
-            description: Get all Tags of a Company's Child Companies
-            operationId: getChildCompaniesTags
-            tags:
-                - Companies
-            responses:
-                '200':
-                    description: Array of tags
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    company_id:
-                                        type: array
-                                        items:
-                                            $ref: '#/components/schemas/ChildCompaniesTagsResponse'
-                            example:
-                                '4':
-                                    - parent_company_id: 1
-                                      child_company_id: 4
-                                      name: 6 panels
-                                      tag_id: 1
-                                    - parent_company_id: 1
-                                      child_company_id: 4
-                                      name: 8 panels
-                                      tag_id: 2
-                                '11':
-                                    - parent_company_id: 1
-                                      child_company_id: 11
-                                      name: 6 panels
-                                      tag_id: 1
-                                    - parent_company_id: 1
-                                      child_company_id: 11
-                                      name: 8 panels
-                                      tag_id: 2
-    '/companies/{company_id}/tags':
-        parameters:
-            - $ref: '#/components/parameters/company_id'
-        get:
-            summary: Get Company Tags
-            description: Get all tags of a Company
-            operationId: getCompanyTags
-            tags:
-                - Companies
-            responses:
-                '200':
-                    description: Array of tags
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    $ref: '#/components/schemas/Tag'
-                            example:
-                                - id: 3
-                                  company_id: 1
-                                  name: 10 panels
-                                  updated_at: '2019-02-13T15:43:20Z'
-                                  created_at: '2019-02-13T15:43:20Z'
-                                - id: 11
-                                  company_id: 1
-                                  name: 4 panels
-                                  updated_at: '2019-12-10T17:49:20Z'
-                                  created_at: '2019-05-02T13:00:19Z'
-                                - id: 1
-                                  company_id: 1
-                                  name: 6 panels
-                                  updated_at: '2018-12-28T14:46:45Z'
-                                  created_at: '2018-12-28T14:46:45Z'
-    '/companies/{company_id}/plant-custom-field-types':
-        parameters:
-            - $ref: '#/components/parameters/company_id'
-        get:
-            summary: Get Company Custom Field types
-            description: Get the Custom Field types of a Company
-            operationId: getCustomFieldTypes
-            tags:
-                - Companies
-            responses:
-                '200':
-                    description: Array of Custom Fields types
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    $ref: '#/components/schemas/CustomFieldType'
-                                example:
-                                    - name: Complexnummer
-                                      company_id: 1
-                                      id: 1
-                                      type: string
-                                      nullable: 1
-                                      regex: ''
-                                      unique: 0
-                                    - name: VHE-nummer
-                                      company_id: 1
-                                      id: 2
-                                      type: string
-                                      nullable: 1
-                                      regex: ''
-                                      unique: 0
-    '/companies/{company_id}/inbound-drivers':
-        parameters:
-            - $ref: '#/components/parameters/company_id'
-        get:
-            summary: Get Company Inbound Drivers
-            operationId: getCompanyInboundDrivers
-            description: Get the inbound drivers available to the Company
-            tags:
-                - Inbound Drivers
-            responses:
-                '200':
-                    description: ''
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    $ref: '#/components/schemas/InboundDriver'
-                                example:
-                                    - id: 2
-                                      name: cast4all
-                                      updated_at: '2018-12-28T14:10:57Z'
-                                      created_at: '2018-12-28T14:10:57Z'
-                                    - id: 7
-                                      name: enphase
-                                      updated_at: '2018-12-28T14:10:57Z'
-                                      created_at: '2019-05-31T10:42:17Z'
-    '/companies/{company_id}/plants/{plant_id}/meters':
-        parameters:
-            - $ref: '#/components/parameters/company_id'
-            - $ref: '#/components/parameters/plant_id'
-        post:
-            summary: Create Plant Meter
-            operationId: createMeter
-            description: Create a new Plant Meter
-            tags:
-                - Meters
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateMeterPayload'
-                description: ''
-            responses:
-                '200':
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Meter'
-                            example:
-                                id: 7279
-                                plant_id: 21
-                                inbound_driver_id: 3
-                                reference_identifier: 31212117-dc7f-308e-9191-888dbb268074
-                                amount_in_cents_per_kwh: 20
-                                peak_in_watt: 4102
-                                p90_in_kwh: 3937
-                                orientation_in_degrees: 102
-                                angle_in_degrees: 321
-                                has_mixed_panel_orientations: 0
-                                status: OK
-                                updated_at: '2020-12-15T14:58:59Z'
-                                created_at: '2020-12-15T14:58:59Z'
-                                retired_on: '2020-12-15T14:58:59Z'
-                                operational_since: '2020-12-15T15:58:59Z'
-    '/companies/{company_id}/meters/{meter_id}':
-        parameters:
-            - $ref: '#/components/parameters/company_id'
-            - $ref: '#/components/parameters/meter_id'
-        put:
-            summary: Update Meter
-            operationId: updateMeter
-            description: Modify the details of a Meter
-            tags:
-                - Meters
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/MeterUpdatePayload'
-                description: ''
-            responses:
-                '200':
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Meter'
-    '/companies/{company_id}/plants/{plant_id}/meters/{meter_id}':
-        parameters:
-            - $ref: '#/components/parameters/company_id'
-            - $ref: '#/components/parameters/plant_id'
-            - $ref: '#/components/parameters/meter_id'
-        get:
-            summary: Get Meter by ID
-            operationId: getMeterById
-            description: Get the details of a Meter
-            tags:
-                - Meters
-            responses:
-                '200':
-                    description: Meter object
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Meter'
-    '/utilities/validate/meter-existence':
-        get:
-            summary: Validate whether a reference_identifier is valid.
-            operationId: validateMeterExistence
-            description: Validate the existence of a meter
-            tags:
-                - Meters
-            parameters:
-                - $ref: '#/components/parameters/inbound_driver'
-                - $ref: '#/components/parameters/reference_identifier'
-            responses:
-                '200':
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/MeterExistenceResponse'
-    '/companies/{company_id}/plants/{plant_id}':
-        parameters:
-            - $ref: '#/components/parameters/company_id'
-            - $ref: '#/components/parameters/plant_id'
-        get:
-            summary: Plant details
-            operationId: getPlantById
-            description: Gets the details of a plant
-            tags:
-                - Plants
-            parameters:
-                - in: query
-                  name: with
-                  required: false
-                  description: 'May containg all or some of the following values\: `tags`, `custom_fields`, `companies`, `meters`, `notes`'
-                  schema:
-                      type: string
-                      example: 'tags,custom_fields,companies,meters,notes'
-            responses:
-                '200':
-                    description: Expected response to a valid request. The example response contains all possible object types that can be returned.
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetPlantResponse' # TO UPDATE THE RESPONSE
-        put:
-            summary: Update Plant
-            operationId: updatePlant
-            description: Update the details of a Plant
-            tags:
-                - Plants
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/PlantPayload'
-                description: ''
-            responses:
-                '200':
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/PlantUpdateResponse'
-    '/companies/{company_id}/plants':
-        parameters:
-            - $ref: '#/components/parameters/company_id'
-        post:
-            summary: Create Plant
-            operationId: createPlant
-            description: Create a new Plant
-            tags:
-                - Plants
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/PlantPayload'
-                description: ''
-            responses:
-                '200':
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/PlantCreateResponse'
-    '/companies/{company_id}/plants/{plant_id}/custom-fields':
-        parameters:
-            - $ref: '#/components/parameters/company_id'
-            - $ref: '#/components/parameters/plant_id'
-        post:
-            summary: Create Plant Custom Fields
-            operationId: createPlantCustomFields
-            description: Create Plant Custom Fields
-            tags:
-                - Plants
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CustomFieldCreatePayload'
-                description: ''
-            responses:
-                '200':
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CustomFieldResponse'
-                            example:
-                                value: string
-                                id: 6
-                                type:
-                                    name: Complexnummer
-                                    company_id: 1
-                                    id: 1
-                                    type: string
-                                    nullable: 1
-                                    regex: null
-                                    unique: 0
-        get:
-            summary: Get Plant Custom Fields
-            operationId: getPlantCustomFields
-            description: Get Plant Custom Fields
-            tags:
-                - Plants
-            responses:
-                '200':
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    $ref: '#/components/schemas/CustomFieldResponse'
-                                example:
-                                    - value: myCustomValue
-                                      id: 5
-                                      type:
-                                          name: VHE-nummer
-                                          company_id: 1
-                                          id: 2
-                                          type: string
-                                          nullable: 1
-                                          regex:
-                                          unique: 0
-                                    - value: string
-                                      id: 6
-                                      type:
-                                          name: Complexnummer
-                                          company_id: 1
-                                          id: 1
-                                          type: string
-                                          nullable: 1
-                                          regex:
-                                          unique: 0
-    '/companies/{company_id}/plants/{plant_id}/custom-fields/{custom_field_id}':
-        parameters:
-            - $ref: '#/components/parameters/company_id'
-            - $ref: '#/components/parameters/plant_id'
-            - $ref: '#/components/parameters/custom_field_id'
-        put:
-            summary: Update Plant Custom Fields
-            operationId: updatePlantCustomFields
-            description: Update Plant Custom Fields
-            tags:
-                - Plants
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CustomFieldUpdatePayload'
-                description: ''
-            responses:
-                '200':
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CustomFieldResponse'
-                            example:
-                                value: Testing custom field
-                                id: 1
-                                type:
-                                    name: Complexnummer
-                                    company_id: 1
-                                    id: 1
-                                    type: string
-                                    nullable: 1
-                                    regex: null
-                                    unique: 0
-components:
+  '/companies/{company_id}/children':
     parameters:
-        company_id:
-            name: company_id
-            in: path
-            required: true
-            description: The id of the company
-            schema:
-                type: integer
-                format: int64
-        custom_field_id:
-            name: custom_field_id
-            in: path
-            required: true
-            description: The id of the custom field
-            schema:
-                type: integer
-                format: int64
-        inbound_driver:
-            name: inbound_driver
-            in: query
-            description: The name of the inbound_driver. For example; 'solaredge' or 'cast4all'.
-            required: true
-            schema:
-                type: string
-                example: solarweb
-        meter_id:
-            name: meter_id
-            in: path
-            required: true
-            description: The id of the meter
-            schema:
-                type: integer
-                format: int64
-        plant_id:
-            name: plant_id
-            in: path
-            required: true
-            description: The id of the plant
-            schema:
-                type: integer
-                format: int64
-        reference_identifier:
-            name: reference_identifier
-            in: query
-            description: The reference_identifier a.k.a. EAN.
-            required: true
-            schema:
-                type: string
-                example: 10cv143-ffavw12-s8nD4t4
-    schemas:
-        Address:
-            allOf:
-                - $ref: '#/components/schemas/AddressBasic'
-                - type: object
-                  properties:
-                      id:
-                          $ref: '#/components/schemas/id'
-                      created_at:
-                          $ref: '#/components/schemas/date-time'
-                      updated_at:
-                          $ref: '#/components/schemas/nullable-date-time'
-                  required:
-                      - id
-                      - updated_at
-                      - created_at
-        AddressBasic:
-            type: object
-            properties:
-                street:
-                    type: string
-                    example: Maliesingel
-                street_number:
-                    type: string
-                    example: '38'
-                city:
-                    type: string
-                    example: Utrecht
-                postal_code:
-                    type: string
-                    example: 3581BK
-                latitude:
-                    type: number
-                    format: float
-                    example: 52.0907
-                longitude:
-                    type: number
-                    format: float
-                    example: 5.1213
-            required:
-                - street
-                - street_number
-                - city
-                - postal_code
-                - latitude
-                - longitude
-        ChildCompaniesTagsResponse:
-            type: object
-            properties:
-                parent_company_id:
-                    $ref: '#/components/schemas/id'
-                child_company_id:
-                    $ref: '#/components/schemas/id'
-                name:
-                    type: string
-                tag_id:
-                    $ref: '#/components/schemas/id'
-            example:
-                - company_id: 1
-                  created_at: '2020-11-06T09:22:59Z'
-                  id: 1
-                  name: Maintainence
-                  updated_at: '2020-11-06T09:22:59Z'
-                - company_id: 1
-                  created_at: '2020-11-06T09:22:59Z'
-                  id: 2
-                  name: Public Housing
-                  updated_at: '2020-11-06T09:22:59Z'
-        Company:
-            required:
-                - id
-                - name
-                - non_mon_accessible
-                - updated_at
-                - created_at
-            properties:
-                id:
-                    $ref: '#/components/schemas/id'
-                name:
-                    type: string
-                    example: 'Padberg, Balistreri and Heidenreich'
-                non_mon_accessible:
-                    type: boolean
-                    example: false
-                is_owner:
-                    type: number
-                updated_at:
-                    $ref: '#/components/schemas/nullable-date-time'
-                created_at:
-                    $ref: '#/components/schemas/date-time'
-        companyIds:
-            type: array
-            items:
+      - $ref: '#/components/parameters/company_id'
+    get:
+      summary: Get Company Child Companies
+      description: Get the Child Companies of a Company by Company ID
+      operationId: getCompanyChildCompanies
+      tags:
+        - Companies
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Company'
+              example:
+                - id: 2
+                  name: 'Padberg, Balistreri and Heidenreich'
+                  non_mon_accessible: false
+                  updated_at: '2020-11-26T18:37:48Z'
+                  created_at: '2020-11-09T18:36:49Z'
+                - id: 3
+                  name: Barrows Group
+                  non_mon_accessible: false
+                  updated_at: null
+                  created_at: '2020-01-24T05:17:39Z'
+  '/companies/{company_id}/children/tags':
+    parameters:
+      - $ref: '#/components/parameters/company_id'
+    get:
+      summary: Get Child Companies Tags
+      description: Get all Tags of a Company's Child Companies
+      operationId: getChildCompaniesTags
+      tags:
+        - Companies
+      responses:
+        '200':
+          description: Array of tags
+          content:
+            application/json:
+              schema:
                 type: object
                 properties:
-                    id:
-                        $ref: '#/components/schemas/id'
-                    is_owner:
-                        type: boolean
-                        example: 0
-        CreateMeterPayload:
-            description: ''
-            type: object
-            properties:
-                inbound_driver:
+                  company_id:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChildCompaniesTagsResponse'
+              example:
+                '4':
+                  - parent_company_id: 1
+                    child_company_id: 4
+                    name: 6 panels
+                    tag_id: 1
+                  - parent_company_id: 1
+                    child_company_id: 4
+                    name: 8 panels
+                    tag_id: 2
+                '11':
+                  - parent_company_id: 1
+                    child_company_id: 11
+                    name: 6 panels
+                    tag_id: 1
+                  - parent_company_id: 1
+                    child_company_id: 11
+                    name: 8 panels
+                    tag_id: 2
+  '/companies/{company_id}/tags':
+    parameters:
+      - $ref: '#/components/parameters/company_id'
+    get:
+      summary: Get Company Tags
+      description: Get all tags of a Company
+      operationId: getCompanyTags
+      tags:
+        - Companies
+      responses:
+        '200':
+          description: Array of tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+              example:
+                - id: 3
+                  company_id: 1
+                  name: 10 panels
+                  updated_at: '2019-02-13T15:43:20Z'
+                  created_at: '2019-02-13T15:43:20Z'
+                - id: 11
+                  company_id: 1
+                  name: 4 panels
+                  updated_at: '2019-12-10T17:49:20Z'
+                  created_at: '2019-05-02T13:00:19Z'
+                - id: 1
+                  company_id: 1
+                  name: 6 panels
+                  updated_at: '2018-12-28T14:46:45Z'
+                  created_at: '2018-12-28T14:46:45Z'
+  '/companies/{company_id}/plant-custom-field-types':
+    parameters:
+      - $ref: '#/components/parameters/company_id'
+    get:
+      summary: Get Company Custom Field types
+      description: Get the Custom Field types of a Company
+      operationId: getCustomFieldTypes
+      tags:
+        - Companies
+      responses:
+        '200':
+          description: Array of Custom Fields types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomFieldType'
+                example:
+                  - name: Complexnummer
+                    company_id: 1
+                    id: 1
                     type: string
-                    example: solaredge
-                reference_identifier:
+                    nullable: 1
+                    regex: ''
+                    unique: 0
+                  - name: VHE-nummer
+                    company_id: 1
+                    id: 2
                     type: string
-                    example: 31212117-dc7f-308e-9191-888dbb268074
-                amount_in_cents_per_kwh:
-                    type: number
-                    nullable: true
-                    example: 20
-                peak_in_watt:
-                    type: number
-                    nullable: true
-                    example: 4102
-                p90_in_kwh:
-                    type: number
-                    nullable: true
-                    example: 3937
-                orientation_in_degrees:
-                    type: number
-                    nullable: true
-                    minimum: 0
-                    maximum: 359
-                    example: 102
-                angle_in_degrees:
-                    type: number
-                    nullable: true
-                    minimum: 0
-                    maximum: 359
-                    example: 321
-            required:
-                - plant_id
-                - inbound_driver
-                - reference_identifier
-        CustomField:
-            type: object
-            properties:
-                value:
-                    type: string
-                id:
-                    $ref: '#/components/schemas/id'
-                type_id:
-                    $ref: '#/components/schemas/id'
-        CustomFieldCreatePayload:
-            type: object
-            properties:
-                type_id:
-                    $ref: '#/components/schemas/id'
-                value:
-                    type: string
-        CustomFieldUpdatePayload:
-            type: object
-            properties:
-                value:
-                    type: string
-        CustomFieldResponse:
-            type: object
-            properties:
-                value:
-                    type: string
-                id:
-                    $ref: '#/components/schemas/id'
-                type:
-                    $ref: '#/components/schemas/Type'
-        CustomFieldType:
-            type: object
-            required:
-                - name
-                - company_id
-                - id
-                - type
-                - nullable
-                - unique
-            properties:
-                name:
-                    type: string
-                company_id:
-                    $ref: '#/components/schemas/id'
-                id:
-                    $ref: '#/components/schemas/id'
-                type:
-                    type: string
-                nullable:
-                    type: boolean
-                regex:
-                    type: string
-                unique:
-                    type: boolean
-        date-time:
+                    nullable: 1
+                    regex: ''
+                    unique: 0
+  '/companies/{company_id}/inbound-drivers':
+    parameters:
+      - $ref: '#/components/parameters/company_id'
+    get:
+      summary: Get Company Inbound Drivers
+      operationId: getCompanyInboundDrivers
+      description: Get the inbound drivers available to the Company
+      tags:
+        - Inbound Drivers
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InboundDriver'
+                example:
+                  - id: 2
+                    name: cast4all
+                    updated_at: '2018-12-28T14:10:57Z'
+                    created_at: '2018-12-28T14:10:57Z'
+                  - id: 7
+                    name: enphase
+                    updated_at: '2018-12-28T14:10:57Z'
+                    created_at: '2019-05-31T10:42:17Z'
+  '/companies/{company_id}/plants/{plant_id}/meters':
+    parameters:
+      - $ref: '#/components/parameters/company_id'
+      - $ref: '#/components/parameters/plant_id'
+    post:
+      summary: Create Plant Meter
+      operationId: createMeter
+      description: Create a new Plant Meter
+      tags:
+        - Meters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMeterPayload'
+        description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meter'
+              example:
+                id: 7279
+                plant_id: 21
+                inbound_driver_id: 3
+                reference_identifier: 31212117-dc7f-308e-9191-888dbb268074
+                amount_in_cents_per_kwh: 20
+                peak_in_watt: 4102
+                p90_in_kwh: 3937
+                orientation_in_degrees: 102
+                angle_in_degrees: 321
+                has_mixed_panel_orientations: 0
+                status: OK
+                updated_at: '2020-12-15T14:58:59Z'
+                created_at: '2020-12-15T14:58:59Z'
+                retired_on: '2020-12-15T14:58:59Z'
+                operational_since: '2020-12-15T15:58:59Z'
+  '/companies/{company_id}/meters/{meter_id}':
+    parameters:
+      - $ref: '#/components/parameters/company_id'
+      - $ref: '#/components/parameters/meter_id'
+    put:
+      summary: Update Meter
+      operationId: updateMeter
+      description: Modify the details of a Meter
+      tags:
+        - Meters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeterUpdatePayload'
+        description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meter'
+  '/companies/{company_id}/plants/{plant_id}/meters/{meter_id}':
+    parameters:
+      - $ref: '#/components/parameters/company_id'
+      - $ref: '#/components/parameters/plant_id'
+      - $ref: '#/components/parameters/meter_id'
+    get:
+      summary: Get Meter by ID
+      operationId: getMeterById
+      description: Get the details of a Meter
+      tags:
+        - Meters
+      responses:
+        '200':
+          description: Meter object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meter'
+  '/utilities/validate/meter-existence':
+    get:
+      summary: Validate whether a reference_identifier is valid.
+      operationId: validateMeterExistence
+      description: Validate the existence of a meter
+      tags:
+        - Meters
+      parameters:
+        - $ref: '#/components/parameters/inbound_driver'
+        - $ref: '#/components/parameters/reference_identifier'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeterExistenceResponse'
+  '/companies/{company_id}/plants':
+    parameters:
+      - $ref: '#/components/parameters/company_id'
+      - $ref: '#/components/parameters/plant_with_fields'
+    get:
+      summary: Plants
+      operationId: getPlants
+      description: Gets the plants within a company
+      tags:
+        - Plants
+      parameters:
+        - in: query
+          name: query
+          required: false
+          schema:
             type: string
-            format: date-time
-            example: '2020-12-10T13:41:00Z'
-        GetPlantResponse:
-            type: object
-            properties:
-                id:
-                    $ref: '#/components/schemas/id'
-                status:
-                    description: The plant status as a string
-                    type: string
-                    enum:
-                        - OK
-                        - MEDIUM
-                        - NONE
-                        - NOK
-                    example: OK
-                name:
-                    type: string
-                    example: SunData Office
-                owning_company_id:
-                    type: integer
-                    example: 1
-                weather_station_id:
-                    $ref: '#/components/schemas/id'
-                monitored_since:
-                    $ref: '#/components/schemas/date-time'
-                address:
-                    $ref: '#/components/schemas/Address'
-            required:
-                - name
-                - id
-        id:
+            example: 'Familie de Vries'
+        - in: query
+          name: street
+          required: false
+          schema:
+            type: string
+            example: 'Maliesingel'
+        - in: query
+          name: postal_code
+          required: false
+          schema:
+            type: string
+            example: '3581BK'
+        - in: query
+          name: city
+          required: false
+          schema:
+            type: string
+            example: 'Utrecht'
+        - in: query
+          name: reference_identifier
+          required: false
+          schema:
+            type: string
+            example: 31212117-dc7f-308e-9191-888dbb268074
+        - in: query
+          name: page
+          required: false
+          description: 'Page of the search results'
+          schema:
             type: integer
-            format: int64
-            example: 1
-        InboundDriver:
-            type: object
-            required:
-                - id
-                - name
-                - created_at
-            properties:
-                id:
-                    $ref: '#/components/schemas/id'
-                name:
-                    type: string
-                updated_at:
-                    $ref: '#/components/schemas/date-time'
-                created_at:
-                    $ref: '#/components/schemas/date-time'
-        MeterExistenceResponse:
-            properties:
-                exists:
-                    description: Is this reference identifier already registered with SunData?
-                    type: boolean
-                validated:
-                    description: Is this reference identifier valid according to the 3rd parties API?
-                    type: boolean
-            type: object
-        Meter:
-            description: ''
-            type: object
-            properties:
-                id:
-                    $ref: '#/components/schemas/id'
-                plant_id:
-                    $ref: '#/components/schemas/id'
-                inbound_driver_id:
-                    $ref: '#/components/schemas/id'
-                reference_identifier:
-                    type: string
-                    example: 31212117-dc7f-308e-9191-888dbb268075
-                amount_in_cents_per_kwh:
-                    type: number
-                    example: 20
-                peak_in_watt:
-                    type: number
-                    example: 4500
-                p90_in_kwh:
-                    type: number
-                    example: 3936
-                orientation_in_degrees:
-                    type: number
-                    minimum: 0
-                    maximum: 359
-                angle_in_degrees:
-                    type: number
-                    minimum: 0
-                    maximum: 360
-                has_mixed_panel_orientations:
-                    type: boolean
-                status:
-                    type: string
-                    example: 'OK'
-                updated_at:
-                    $ref: '#/components/schemas/date-time'
-                created_at:
-                    $ref: '#/components/schemas/date-time'
-                retired_on:
-                    $ref: '#/components/schemas/date-time'
-                operational_since:
-                    $ref: '#/components/schemas/date-time'
-            required:
-                - id
-                - plant_id
-                - inbound_driver_id
-                - reference_identifier
-                - updated_at
-                - created_at
-        MeterUpdatePayload:
-            description: ''
-            type: object
-            properties:
-                plant_id:
-                    type: integer
-                    format: int64
-                    example: 1
-                    readOnly: true
-                    description: Updating the plant_id will move the meter to another plant. Only plants of the same company are allowed.
-                amount_in_cents_per_kwh:
-                    type: number
-                    example: 20
-                    nullable: true
-                peak_in_watt:
-                    type: number
-                    example: 4500
-                    nullable: true
-                p90_in_kwh:
-                    type: number
-                    example: 3936
-                    nullable: true
-                orientation_in_degrees:
-                    type: number
-                    minimum: 0
-                    maximum: 359
-                    nullable: true
-                angle_in_degrees:
-                    type: number
-                    minimum: 0
-                    maximum: 359
-                    nullable: true
-                has_mixed_panel_orientations:
-                    type: boolean
-                retired_on:
-                    type: string
-                    format: date-time
-                    nullable: true
-                    example: '2020-11-06T09:22:59Z'
-            required:
-                - id
-                - inbound_driver_id
-                - reference_identifier
-                - updated_at
-                - created_at
-        Note:
-            description: ''
-            type: object
-            properties:
-                id:
-                    type: number
-                title:
-                    type: string
-                message:
-                    type: string
-                created_at:
-                    $ref: '#/components/schemas/date-time'
-                author:
-                    $ref: '#/components/schemas/User'
-            required:
-                - id
-                - title
-                - message
-                - created_at
-                - author
-        nullable-date-time:
-            type: string
-            nullable: true
-            format: date-time
-            example: '2020-12-10T13:41:00Z'
-        PlantUpdateResponse:
-            type: object
-            properties:
-                id:
-                    $ref: '#/components/schemas/id'
-                status:
-                    type: string
-                name:
-                    type: string
-                owning_company_id:
-                    $ref: '#/components/schemas/id'
-                weather_station_id:
-                    $ref: '#/components/schemas/id'
-                monitored_since:
-                    $ref: '#/components/schemas/date-time'
-                address:
-                    $ref: '#/components/schemas/Address'
-                companies:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Company'
-                tags:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Tag'
-            example:
-                id: 21
-                status: OK
-                name: SunData Office
-                owning_company_id: 1
-                weather_station_id: 12
-                monitored_since: '2019-01-18T20:22:24Z'
-                address:
-                    id: 21
-                    street: Schatsberg
-                    street_number: '17'
-                    city: Amersfoort
-                    postal_code: 3825GM
-                    latitude: 52.2021324
-                    longitude: 5.416898
-                    updated_at: '2019-01-18T20:22:24Z'
-                    created_at: '2019-01-18T20:22:24Z'
-                companies:
-                    - id: 1
-                      name: GreenChoice
-                      non_mon_accessible: false
-                      is_owner: 1
-                      updated_at: '2018-12-28T14:14:43Z'
-                      created_at: '2018-12-28T14:14:43Z'
-                tags:
-                    - id: 1
-                      company_id: 1
-                      name: 6 panels
-                      updated_at: '2018-12-28T14:46:45Z'
-                      created_at: '2018-12-28T14:46:45Z'
-        PlantCreateResponse:
-            type: object
-            properties:
-                id:
-                    $ref: '#/components/schemas/id'
-                status:
-                    type: string
-                name:
-                    type: string
-                owning_company_id:
-                    $ref: '#/components/schemas/id'
-                weather_station_id:
-                    $ref: '#/components/schemas/id'
-                monitored_since:
-                    $ref: '#/components/schemas/date-time'
-                address:
-                    $ref: '#/components/schemas/Address'
-                companies:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Company'
-                tags:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Tag'
-                custom_fields:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/CustomField'
-            required:
-                - id
-                - status
-                - name
-                - owning_company_id
-                - monitored_since
-                - address
-                - companies
-                - tags
-                - custom_fields
-            example:
-                id: 7267
-                status: OK
-                name: SunData Office
-                owning_company_id: 1
-                weather_station_id: 1
-                monitored_since: '2020-12-15T13:53:06Z'
-                address:
-                    id: 7267
-                    street: Maliesingel
-                    street_number: '38'
-                    city: Utrecht
-                    postal_code: 3581BK
-                    latitude: 52.0907
-                    longitude: 5.1213
-                    updated_at: '2020-12-15T13:53:06Z'
-                    created_at: '2020-12-15T13:53:06Z'
-                companies:
-                    - id: 1
-                      name: GreenChoice
-                      non_mon_accessible: false
-                      is_owner: 1
-                      updated_at: '2018-12-28T14:14:43Z'
-                      created_at: '2018-12-28T14:14:43Z'
-                tags:
-                    - id: 1
-                      company_id: 1
-                      name: 6 panels
-                      updated_at: '2018-12-28T14:46:45Z'
-                      created_at: '2018-12-28T14:46:45Z'
-                custom_fields: []
-        PlantBasic:
-            type: object
-            properties:
-                name:
-                    type: string
-                    example: SunData Office
-                owning_company_id:
-                    type: integer
-                    example: 1
-                address:
-                    $ref: '#/components/schemas/Address'
-                tag_ids:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/id'
-            required:
-                - name
-        PlantPayload:
-            type: object
-            properties:
-                name:
-                    type: string
-                    example: SunData Office
-                owning_company_id:
-                    type: integer
-                    example: 1
-                address:
-                    $ref: '#/components/schemas/Address'
-                tag_ids:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/id'
-                company_ids:
-                    type: array
-                    items:
-                        type: object
-                        properties:
-                            id:
-                                $ref: '#/components/schemas/id'
-                            is_owner:
-                                type: boolean
-                                default: false
-            required:
-                - name
-        PlantBasicResponse:
-            type: object
-            properties:
-                name:
-                    type: string
-                    example: SunData Office
-                owning_company_id:
-                    type: integer
-                    example: 1
-                address:
-                    $ref: '#/components/schemas/Address'
-                tag_ids:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/id'
-                company_ids:
-                    type: array
-                    items:
-                        type: object
-
-            required:
-                - name
-        Plant:
-            allOf:
-                - $ref: '#/components/schemas/PlantBasic'
-                - type: object
-                  properties:
-                      id:
-                          $ref: '#/components/schemas/id'
-                      status:
-                          description: The plant status as a string
-                          type: string
-                          enum:
-                              - OK
-                              - MEDIUM
-                              - NONE
-                              - NOK
-                          example: OK
-                      weather_station_id:
-                          description: The ID of the nearest weather station
-                          type: integer
-                      monitored_since:
-                          $ref: '#/components/schemas/date-time'
-                  required:
-                      - id
-        Tag:
-            required:
-                - id
-                - company_id
-                - name
-                - updated_at
-                - created_at
-            properties:
-                id:
-                    $ref: '#/components/schemas/id'
-                company_id:
-                    $ref: '#/components/schemas/id'
-                name:
-                    type: string
-                updated_at:
-                    $ref: '#/components/schemas/nullable-date-time'
-                created_at:
-                    $ref: '#/components/schemas/date-time'
-        Type:
-            description: ''
-            type: object
-            properties:
-                name:
-                    type: string
-                company_id:
-                    type: number
-                id:
-                    type: number
+            example: 2
+      responses:
+        '200':
+          description: Expected response to a valid request. The example response contains all possible object types that can be returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPaginatedPlantsResponse'
+    post:
+      summary: Create Plant
+      operationId: createPlant
+      description: Create a new Plant
+      tags:
+        - Plants
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlantPayload'
+        description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlantCreateResponse'
+  '/companies/{company_id}/plants/{plant_id}':
+    parameters:
+      - $ref: '#/components/parameters/company_id'
+      - $ref: '#/components/parameters/plant_id'
+      - $ref: '#/components/parameters/plant_with_fields'
+    get:
+      summary: Plant details
+      operationId: getPlantById
+      description: Gets the details of a plant
+      tags:
+        - Plants
+      responses:
+        '200':
+          description: Expected response to a valid request. The example response contains all possible object types that can be returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPlantResponse' # TO UPDATE THE RESPONSE
+    put:
+      summary: Update Plant
+      operationId: updatePlant
+      description: Update the details of a Plant
+      tags:
+        - Plants
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlantPayload'
+        description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlantUpdateResponse'
+  '/companies/{company_id}/plants/{plant_id}/custom-fields':
+    parameters:
+      - $ref: '#/components/parameters/company_id'
+      - $ref: '#/components/parameters/plant_id'
+    post:
+      summary: Create Plant Custom Fields
+      operationId: createPlantCustomFields
+      description: Create Plant Custom Fields
+      tags:
+        - Plants
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomFieldCreatePayload'
+        description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomFieldResponse'
+              example:
+                value: string
+                id: 6
                 type:
-                    type: string
-                nullable:
-                    type: boolean
-                regex:
-                    type: string
-                unique:
-                    type: boolean
-            required:
-                - name
-                - company_id
-                - id
-                - type
-                - nullable
-                - unique
-        User:
+                  name: Complexnummer
+                  company_id: 1
+                  id: 1
+                  type: string
+                  nullable: 1
+                  regex: null
+                  unique: 0
+    get:
+      summary: Get Plant Custom Fields
+      operationId: getPlantCustomFields
+      description: Get Plant Custom Fields
+      tags:
+        - Plants
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomFieldResponse'
+                example:
+                  - value: myCustomValue
+                    id: 5
+                    type:
+                      name: VHE-nummer
+                      company_id: 1
+                      id: 2
+                      type: string
+                      nullable: 1
+                      regex:
+                      unique: 0
+                  - value: string
+                    id: 6
+                    type:
+                      name: Complexnummer
+                      company_id: 1
+                      id: 1
+                      type: string
+                      nullable: 1
+                      regex:
+                      unique: 0
+  '/companies/{company_id}/plants/{plant_id}/custom-fields/{custom_field_id}':
+    parameters:
+      - $ref: '#/components/parameters/company_id'
+      - $ref: '#/components/parameters/plant_id'
+      - $ref: '#/components/parameters/custom_field_id'
+    put:
+      summary: Update Plant Custom Fields
+      operationId: updatePlantCustomFields
+      description: Update Plant Custom Fields
+      tags:
+        - Plants
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomFieldUpdatePayload'
+        description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomFieldResponse'
+              example:
+                value: Testing custom field
+                id: 1
+                type:
+                  name: Complexnummer
+                  company_id: 1
+                  id: 1
+                  type: string
+                  nullable: 1
+                  regex: null
+                  unique: 0
+components:
+  parameters:
+    company_id:
+      name: company_id
+      in: path
+      required: true
+      description: The id of the company
+      schema:
+        type: integer
+        format: int64
+    custom_field_id:
+      name: custom_field_id
+      in: path
+      required: true
+      description: The id of the custom field
+      schema:
+        type: integer
+        format: int64
+    inbound_driver:
+      name: inbound_driver
+      in: query
+      description: The name of the inbound_driver. For example; 'solaredge' or 'cast4all'.
+      required: true
+      schema:
+        type: string
+        example: solarweb
+    meter_id:
+      name: meter_id
+      in: path
+      required: true
+      description: The id of the meter
+      schema:
+        type: integer
+        format: int64
+    plant_id:
+      name: plant_id
+      in: path
+      required: true
+      description: The id of the plant
+      schema:
+        type: integer
+        format: int64
+    reference_identifier:
+      name: reference_identifier
+      in: query
+      description: The reference_identifier a.k.a. EAN.
+      required: true
+      schema:
+        type: string
+        example: 10cv143-ffavw12-s8nD4t4
+    plant_with_fields:
+      name: with
+      in: query
+      required: false
+      description: 'May containg all or some of the following values\: `tags`, `custom_fields`, `companies`, `meters`, `notes`'
+      schema:
+        type: string
+        example: 'tags,custom_fields,companies,meters,notes'
+  schemas:
+    Address:
+      allOf:
+        - $ref: '#/components/schemas/AddressBasic'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/id'
+            created_at:
+              $ref: '#/components/schemas/date-time'
+            updated_at:
+              $ref: '#/components/schemas/nullable-date-time'
+          required:
+            - id
+            - updated_at
+            - created_at
+    AddressBasic:
+      type: object
+      properties:
+        street:
+          type: string
+          example: Maliesingel
+        street_number:
+          type: string
+          example: '38'
+        city:
+          type: string
+          example: Utrecht
+        postal_code:
+          type: string
+          example: 3581BK
+        latitude:
+          type: number
+          format: float
+          example: 52.0907
+        longitude:
+          type: number
+          format: float
+          example: 5.1213
+      required:
+        - street
+        - street_number
+        - city
+        - postal_code
+        - latitude
+        - longitude
+    ChildCompaniesTagsResponse:
+      type: object
+      properties:
+        parent_company_id:
+          $ref: '#/components/schemas/id'
+        child_company_id:
+          $ref: '#/components/schemas/id'
+        name:
+          type: string
+        tag_id:
+          $ref: '#/components/schemas/id'
+      example:
+        - company_id: 1
+          created_at: '2020-11-06T09:22:59Z'
+          id: 1
+          name: Maintainence
+          updated_at: '2020-11-06T09:22:59Z'
+        - company_id: 1
+          created_at: '2020-11-06T09:22:59Z'
+          id: 2
+          name: Public Housing
+          updated_at: '2020-11-06T09:22:59Z'
+    Company:
+      required:
+        - id
+        - name
+        - non_mon_accessible
+        - updated_at
+        - created_at
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        name:
+          type: string
+          example: 'Padberg, Balistreri and Heidenreich'
+        non_mon_accessible:
+          type: boolean
+          example: false
+        is_owner:
+          type: number
+        updated_at:
+          $ref: '#/components/schemas/nullable-date-time'
+        created_at:
+          $ref: '#/components/schemas/date-time'
+    companyIds:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/id'
+          is_owner:
+            type: boolean
+            example: 0
+    CreateMeterPayload:
+      description: ''
+      type: object
+      properties:
+        inbound_driver:
+          type: string
+          example: solaredge
+        reference_identifier:
+          type: string
+          example: 31212117-dc7f-308e-9191-888dbb268074
+        amount_in_cents_per_kwh:
+          type: number
+          nullable: true
+          example: 20
+        peak_in_watt:
+          type: number
+          nullable: true
+          example: 4102
+        p90_in_kwh:
+          type: number
+          nullable: true
+          example: 3937
+        orientation_in_degrees:
+          type: number
+          nullable: true
+          minimum: 0
+          maximum: 359
+          example: 102
+        angle_in_degrees:
+          type: number
+          nullable: true
+          minimum: 0
+          maximum: 359
+          example: 321
+      required:
+        - plant_id
+        - inbound_driver
+        - reference_identifier
+    CustomField:
+      type: object
+      properties:
+        value:
+          type: string
+        id:
+          $ref: '#/components/schemas/id'
+        type_id:
+          $ref: '#/components/schemas/id'
+    CustomFieldCreatePayload:
+      type: object
+      properties:
+        type_id:
+          $ref: '#/components/schemas/id'
+        value:
+          type: string
+    CustomFieldUpdatePayload:
+      type: object
+      properties:
+        value:
+          type: string
+    CustomFieldResponse:
+      type: object
+      properties:
+        value:
+          type: string
+        id:
+          $ref: '#/components/schemas/id'
+        type:
+          $ref: '#/components/schemas/Type'
+    CustomFieldType:
+      type: object
+      required:
+        - name
+        - company_id
+        - id
+        - type
+        - nullable
+        - unique
+      properties:
+        name:
+          type: string
+        company_id:
+          $ref: '#/components/schemas/id'
+        id:
+          $ref: '#/components/schemas/id'
+        type:
+          type: string
+        nullable:
+          type: boolean
+        regex:
+          type: string
+        unique:
+          type: boolean
+    date-time:
+      type: string
+      format: date-time
+      example: '2020-12-10T13:41:00Z'
+    GetPaginatedPlantsResponse:
+      properties:
+        current_page:
+          type: integer
+          example: 2
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetPlantResponse'
+        next_page_url:
+          type: string
+          example: "/?page=3"
+        path:
+          type: string
+          example: "/"
+        per_page:
+          type: integer
+          default: 15
+        prev_page:
+          type: string
+          example: "/?page=1"
+        to:
+          type: integer
+          default: 45
+        total:
+          type: integer
+          default: 225
+    GetPlantResponse:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        status:
+          description: The plant status as a string
+          type: string
+          enum:
+            - OK
+            - MEDIUM
+            - NONE
+            - NOK
+          example: OK
+        name:
+          type: string
+          example: SunData Office
+        owning_company_id:
+          type: integer
+          example: 1
+        weather_station_id:
+          $ref: '#/components/schemas/id'
+        monitored_since:
+          $ref: '#/components/schemas/date-time'
+        address:
+          $ref: '#/components/schemas/Address'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomField'
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+        meters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Meter'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
+      required:
+        - name
+        - id
+    id:
+      type: integer
+      format: int64
+      example: 1
+    InboundDriver:
+      type: object
+      required:
+        - id
+        - name
+        - created_at
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        name:
+          type: string
+        updated_at:
+          $ref: '#/components/schemas/date-time'
+        created_at:
+          $ref: '#/components/schemas/date-time'
+    MeterExistenceResponse:
+      properties:
+        exists:
+          description: Is this reference identifier already registered with SunData?
+          type: boolean
+        validated:
+          description: Is this reference identifier valid according to the 3rd parties API?
+          type: boolean
+      type: object
+    Meter:
+      description: ''
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        plant_id:
+          $ref: '#/components/schemas/id'
+        inbound_driver_id:
+          $ref: '#/components/schemas/id'
+        reference_identifier:
+          type: string
+          example: 31212117-dc7f-308e-9191-888dbb268075
+        amount_in_cents_per_kwh:
+          type: number
+          example: 20
+        peak_in_watt:
+          type: number
+          example: 4500
+        p90_in_kwh:
+          type: number
+          example: 3936
+        orientation_in_degrees:
+          type: number
+          minimum: 0
+          maximum: 359
+        angle_in_degrees:
+          type: number
+          minimum: 0
+          maximum: 360
+        has_mixed_panel_orientations:
+          type: boolean
+        status:
+          type: string
+          example: 'OK'
+        updated_at:
+          $ref: '#/components/schemas/date-time'
+        created_at:
+          $ref: '#/components/schemas/date-time'
+        retired_on:
+          $ref: '#/components/schemas/date-time'
+        operational_since:
+          $ref: '#/components/schemas/date-time'
+      required:
+        - id
+        - plant_id
+        - inbound_driver_id
+        - reference_identifier
+        - updated_at
+        - created_at
+    MeterUpdatePayload:
+      description: ''
+      type: object
+      properties:
+        plant_id:
+          type: integer
+          format: int64
+          example: 1
+          readOnly: true
+          description: Updating the plant_id will move the meter to another plant. Only plants of the same company are allowed.
+        amount_in_cents_per_kwh:
+          type: number
+          example: 20
+          nullable: true
+        peak_in_watt:
+          type: number
+          example: 4500
+          nullable: true
+        p90_in_kwh:
+          type: number
+          example: 3936
+          nullable: true
+        orientation_in_degrees:
+          type: number
+          minimum: 0
+          maximum: 359
+          nullable: true
+        angle_in_degrees:
+          type: number
+          minimum: 0
+          maximum: 359
+          nullable: true
+        has_mixed_panel_orientations:
+          type: boolean
+        retired_on:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2020-11-06T09:22:59Z'
+      required:
+        - id
+        - inbound_driver_id
+        - reference_identifier
+        - updated_at
+        - created_at
+    Note:
+      description: ''
+      type: object
+      properties:
+        id:
+          type: number
+        title:
+          type: string
+        message:
+          type: string
+        created_at:
+          $ref: '#/components/schemas/date-time'
+        author:
+          $ref: '#/components/schemas/User'
+      required:
+        - id
+        - title
+        - message
+        - created_at
+        - author
+    nullable-date-time:
+      type: string
+      nullable: true
+      format: date-time
+      example: '2020-12-10T13:41:00Z'
+    PlantUpdateResponse:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        status:
+          type: string
+        name:
+          type: string
+        owning_company_id:
+          $ref: '#/components/schemas/id'
+        weather_station_id:
+          $ref: '#/components/schemas/id'
+        monitored_since:
+          $ref: '#/components/schemas/date-time'
+        address:
+          $ref: '#/components/schemas/Address'
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+      example:
+        id: 21
+        status: OK
+        name: SunData Office
+        owning_company_id: 1
+        weather_station_id: 12
+        monitored_since: '2019-01-18T20:22:24Z'
+        address:
+          id: 21
+          street: Schatsberg
+          street_number: '17'
+          city: Amersfoort
+          postal_code: 3825GM
+          latitude: 52.2021324
+          longitude: 5.416898
+          updated_at: '2019-01-18T20:22:24Z'
+          created_at: '2019-01-18T20:22:24Z'
+        companies:
+          - id: 1
+            name: GreenChoice
+            non_mon_accessible: false
+            is_owner: 1
+            updated_at: '2018-12-28T14:14:43Z'
+            created_at: '2018-12-28T14:14:43Z'
+        tags:
+          - id: 1
+            company_id: 1
+            name: 6 panels
+            updated_at: '2018-12-28T14:46:45Z'
+            created_at: '2018-12-28T14:46:45Z'
+    PlantCreateResponse:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        status:
+          type: string
+        name:
+          type: string
+        owning_company_id:
+          $ref: '#/components/schemas/id'
+        weather_station_id:
+          $ref: '#/components/schemas/id'
+        monitored_since:
+          $ref: '#/components/schemas/date-time'
+        address:
+          $ref: '#/components/schemas/Address'
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomField'
+      required:
+        - id
+        - status
+        - name
+        - owning_company_id
+        - monitored_since
+        - address
+        - companies
+        - tags
+        - custom_fields
+      example:
+        id: 7267
+        status: OK
+        name: SunData Office
+        owning_company_id: 1
+        weather_station_id: 1
+        monitored_since: '2020-12-15T13:53:06Z'
+        address:
+          id: 7267
+          street: Maliesingel
+          street_number: '38'
+          city: Utrecht
+          postal_code: 3581BK
+          latitude: 52.0907
+          longitude: 5.1213
+          updated_at: '2020-12-15T13:53:06Z'
+          created_at: '2020-12-15T13:53:06Z'
+        companies:
+          - id: 1
+            name: GreenChoice
+            non_mon_accessible: false
+            is_owner: 1
+            updated_at: '2018-12-28T14:14:43Z'
+            created_at: '2018-12-28T14:14:43Z'
+        tags:
+          - id: 1
+            company_id: 1
+            name: 6 panels
+            updated_at: '2018-12-28T14:46:45Z'
+            created_at: '2018-12-28T14:46:45Z'
+        custom_fields: [ ]
+    PlantBasic:
+      type: object
+      properties:
+        name:
+          type: string
+          example: SunData Office
+        owning_company_id:
+          type: integer
+          example: 1
+        address:
+          $ref: '#/components/schemas/Address'
+        tag_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/id'
+      required:
+        - name
+    PlantPayload:
+      type: object
+      properties:
+        name:
+          type: string
+          example: SunData Office
+        owning_company_id:
+          type: integer
+          example: 1
+        address:
+          $ref: '#/components/schemas/Address'
+        tag_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/id'
+        company_ids:
+          type: array
+          items:
             type: object
             properties:
-                id:
-                    $ref: '#/components/schemas/id'
-                first_name:
-                    type: string
-                last_name:
-                    type: string
-                email:
-                    type: string
-                admin:
-                    type: boolean
-                subscribed_to_status_emails:
-                    type: boolean
-                updated_at:
-                    $ref: '#/components/schemas/date-time'
-                created_at:
-                    $ref: '#/components/schemas/date-time'
-            required:
-                - id
-                - first_name
-                - last_name
-                - email
-                - admin
-                - subscribed_to_status_emails
-                - updated_at
-                - created_at
-    securitySchemes:
-        AccessToken:
-            type: apiKey
-            in: header
-            name: Access-Token
+              id:
+                $ref: '#/components/schemas/id'
+              is_owner:
+                type: boolean
+                default: false
+      required:
+        - name
+    PlantBasicResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          example: SunData Office
+        owning_company_id:
+          type: integer
+          example: 1
+        address:
+          $ref: '#/components/schemas/Address'
+        tag_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/id'
+        company_ids:
+          type: array
+          items:
+            type: object
+
+      required:
+        - name
+    Plant:
+      allOf:
+        - $ref: '#/components/schemas/PlantBasic'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/id'
+            status:
+              description: The plant status as a string
+              type: string
+              enum:
+                - OK
+                - MEDIUM
+                - NONE
+                - NOK
+              example: OK
+            weather_station_id:
+              description: The ID of the nearest weather station
+              type: integer
+            monitored_since:
+              $ref: '#/components/schemas/date-time'
+          required:
+            - id
+    Tag:
+      required:
+        - id
+        - company_id
+        - name
+        - updated_at
+        - created_at
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        company_id:
+          $ref: '#/components/schemas/id'
+        name:
+          type: string
+        updated_at:
+          $ref: '#/components/schemas/nullable-date-time'
+        created_at:
+          $ref: '#/components/schemas/date-time'
+    Type:
+      description: ''
+      type: object
+      properties:
+        name:
+          type: string
+        company_id:
+          type: number
+        id:
+          type: number
+        type:
+          type: string
+        nullable:
+          type: boolean
+        regex:
+          type: string
+        unique:
+          type: boolean
+      required:
+        - name
+        - company_id
+        - id
+        - type
+        - nullable
+        - unique
+    User:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        admin:
+          type: boolean
+        subscribed_to_status_emails:
+          type: boolean
+        updated_at:
+          $ref: '#/components/schemas/date-time'
+        created_at:
+          $ref: '#/components/schemas/date-time'
+      required:
+        - id
+        - first_name
+        - last_name
+        - email
+        - admin
+        - subscribed_to_status_emails
+        - updated_at
+        - created_at
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Access-Token
 security:
-    - AccessToken: []
+  - AccessToken: [ ]

@@ -1,0 +1,4 @@
+.idea
+php-test-client
+generate.sh
+.openapi-generator/VERSION
