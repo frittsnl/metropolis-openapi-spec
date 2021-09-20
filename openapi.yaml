@@ -761,7 +761,9 @@ components:
           type: integer
           example: 2
         data:
-          $ref: '#/components/schemas/GetPlantResponse'
+          type: array
+          items:
+            $ref: '#/components/schemas/GetPlantResponse'
         next_page_url:
           type: string
           example: "/?page=3"
