@@ -1265,9 +1265,8 @@ components:
         - updated_at
         - created_at
   securitySchemes:
-    AccessToken:
-      type: apiKey
-      in: header
-      name: Access-Token
+    BearerAuth:
+      type: http
+      scheme: bearer
 security:
-  - AccessToken: [ ]
+  - BearerAuth: [ ]
